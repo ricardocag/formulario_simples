@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog</title>
+    
+    <style>
+     
+       * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui;
+        }
+        h1 {
+            font-size: initial;
+        }
+        h2 {
+            font-size: initial;
+        }
+        h3 {
+            font-size: initial;
+        }
+        h4 {
+            font-size: initial;
+        }
+        h5 {
+            font-size: initial;
+        }
+        h6 {
+            font-size: initial;
+        }
+
+        a:hover {
+                color: burlywood;
+                text-decoration: underline;           
+                  }
+
+        .container {
+                    max-width: 800px; 
+                    margin: auto;
+                    padding: 10px;   
+                     align-items: center; 
+
+                  }
+      
+      
+        img.responsiva {
+       width: 100%;      /* ocupa 100% da largura do container */
+        height: auto;     /*mantém a proporção da imagem */
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        width: 150px;   /* define a largura */
+        
+    }
+        
+        #form_banner {
+          background-image: url('imagem.jpg'); 
+          background-size: contain;              /* imagem ocupa todo o espaço */
+          background-position: center;         /* centraliza a imagem */
+          background-repeat: no-repeat;
+          height: 310px;                       /* altura do banner */
+          display: flex;                       /* centraliza o texto */
+          justify-content: center;
+          align-items: center;
+        }
+  </style>
+  </head>
+  <link rel="stylesheet" href="style.css">
+  <body >
+  <main>
+    <section id = "home">
+      <div id="form_banner" class= "container">
+             <h1 id="form_banner">  Blog  </h1>
+       </div>   
+    </section>  
+     <form id="Form-blog">  
+       <div class="container" id="main">
+         <table id = "tab_form">
+            <tr>
+             <th>
+              <label form="form-titulo">Titulo</label>
+              <input id= "form-titulo" type='text'>             
+           </th>
+            <th>
+             <label form="form-texto"  >Conteudo</label>
+             <textarea id = "form-conteudo" name="Conteudo" rows="10" cols="50"></textarea>
+             <input type="submit" id="botao-adicionar" value="Adicionar" class="btn btn-outline">
+             </th>
+           </tr>
+         </table>
+      </div>   
+      </form>  
+     
+   
+    <section>
+      <table id = "tab_form">
+      <tr>
+        <th>
+          <h1> Titulo </h1>
+           <h2 id="renderizador-titulo">#########</h2>
+        </th>
+        <th> 
+           <h1> conteudo </h1>   
+           <h2 id="renderizador-texto">#########</h2>
+       </th>
+       </tr>
+    </section>
+
+    </main>
+
+    
+  </body>
+<script>
+    class PacoteBuscador {
+        constructor(baseURL) {
+            this.baseURL = baseURL;
+        }
+    
+        get(endpoint) {
+            return fetch(this.baseURL + endpoint)
+                .then(response => response.json());
+        }
+    
+        put(endpoint, body) {
+            return this._send("PUT", endpoint, body);
+        }
+    
+        post(endpoint, body) {
+            return this._send("POST", endpoint, body);
+        }
+    
+        delete(endpoint, body) {
+            return this._send("DELETE", endpoint, body);
+        }
+    
+        _send(method, endpoint, body) {
+            return fetch(this.baseURL + endpoint, {
+                method,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }).then(response => response.json());
+        }
+    }
+
+    const form = document.querySelector("#Form-blog");
+    const formTitulo = document.querySelector("#form-titulo");
+    const formConteudo = document.querySelector("#form-conteudo");
+    const API = new PacoteBuscador("https://jsonplaceholder.typicode.com/");
+    
+    const renderizadorTitulo = document.querySelector("#renderizador-titulo");
+    const renderizadorTexto = document.querySelector("#renderizador-texto");
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const data = {
+            title: formTitulo.value,
+            body: formConteudo.value,
+            userId: 1
+        };
+
+        API.post("posts", data)
+        .then(retorno => {
+            renderizadorTitulo.textContent = retorno.title;
+            renderizadorTexto.textContent = retorno.body; 
+        });
+    });
+</script></html>
+
